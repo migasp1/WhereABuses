@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "641626441390",
+    "firebase_url": "https://where-a-buses-d942f-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "where-a-buses-d942f",
+    "storage_bucket": "where-a-buses-d942f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:641626441390:android:67a20d2aaf90e8ec430f3f",
+        "android_client_info": {
+          "package_name": "com.example.whereabuses"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "641626441390-0m4h2hpqfqt8c7hobo10khrn31oud1t1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBObZylrYezTrJT6SQ7Nd1QJTMS6aWAp2U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "641626441390-0m4h2hpqfqt8c7hobo10khrn31oud1t1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
