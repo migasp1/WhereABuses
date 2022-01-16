@@ -19,10 +19,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,8 +29,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import Utils.AnimationUtils;
 import Utils.MapUtils;
@@ -47,6 +51,7 @@ public class MapsFragment extends Fragment {
     private LatLng previousLatLng;
     private LatLng currentLatLng;
     int index = 0;
+
 
 
     String provider;
@@ -198,31 +203,48 @@ public class MapsFragment extends Fragment {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    showMovingCab(MapUtils.getListOfLocations());
+                    showMovingBus();
+                    System.out.println("AAAAAAAAAAAAAA");
                 }
             }, 3000);
 
             mMap.getUiSettings().setZoomControlsEnabled(true);
+
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(@NonNull Marker marker) {
+                        System.out.println("--MARKER CLICKADO--");
+                    return false;
+                }
+            });
         }
 
     };
 
-    private void showMovingCab(ArrayList<LatLng> locations){
+    FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+    DocumentReference documentReference = rootRef.collection("731").document("buses");
+
+    private void showMovingBus(){
 
         final Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable =
                 new Runnable(){
                     public void run(){
+                        rootRef.collection("731").document("Buses")
+                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(@NonNull DocumentSnapshot documentSnapshot) {
+                                if(documentSnapshot.exists()){
+                                    GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("731-1");
+                                    LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+                                    System.out.println("FUI BUSCAR ESTA LOCALIZAÇAO" + location);
+                                    updateCarLocation(location);
+                                }
 
+                            }
+                        });
 
-                        if (index < 5) {
-                            updateCarLocation(locations.get(index));
-                            handler.postDelayed(this, 3000);
-                            ++index;
-                        } else {
-                            //handler.removeCallbacks(runnable);
-                            System.out.println("Trip Ends");
-                        }
+                        handler.postDelayed(this, 20000);
                     }
                 };
         handler.postDelayed(runnable,1000);
@@ -266,6 +288,7 @@ public class MapsFragment extends Fragment {
         BitmapDescriptor bitmapDescriptor=BitmapDescriptorFactory.fromBitmap(MapUtils.getBusIcon(getContext()));
         return mMap.addMarker(new MarkerOptions().position(latLngCar).flat(true).icon(bitmapDescriptor));
     }
+
 
 
 
