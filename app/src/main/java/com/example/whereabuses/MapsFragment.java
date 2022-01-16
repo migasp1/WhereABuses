@@ -203,6 +203,7 @@ public class MapsFragment extends Fragment {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+
                     showMovingBus();
                     System.out.println("AAAAAAAAAAAAAA");
                 }
