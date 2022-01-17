@@ -7,7 +7,10 @@ import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -19,6 +22,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -59,6 +63,7 @@ public class MapsFragment extends Fragment {
     private final float MIN_DISTANCE = 0.5F;
     double lat1;
     double lon1;
+    Dialog materialDialog;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -213,9 +218,34 @@ public class MapsFragment extends Fragment {
 
             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
-                public boolean onMarkerClick(@NonNull Marker marker) {
-                        System.out.println("--MARKER CLICKADO--");
-                    return false;
+                public boolean onMarkerClick(final Marker marker) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Title");
+                    builder.setItems(new CharSequence[]
+                                    {"Chat", "button 2", "button 3", "button 4"},
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // The 'which' argument contains the index position
+                                    // of the selected item
+                                    switch (which) {
+                                        case 0:
+                                            Toast.makeText(getContext(), "clicked 1", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case 1:
+                                            Toast.makeText(getContext(), "clicked 2", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case 2:
+                                            Toast.makeText(getContext(), "clicked 3", Toast.LENGTH_SHORT).show();
+                                            break;
+                                        case 3:
+                                            Toast.makeText(getContext(), "clicked 4", Toast.LENGTH_SHORT).show();
+                                            break;
+                                    }
+                                }
+                            });
+                    builder.create().show();
+
+                    return true;
                 }
             });
         }
@@ -237,7 +267,7 @@ public class MapsFragment extends Fragment {
                                 @Override
                                 public void onSuccess(@NonNull DocumentSnapshot documentSnapshot) {
                                     if(documentSnapshot.exists()){
-                                        GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("731-1");
+                                        GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("731-4");
                                         LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
                                         System.out.println("FUI BUSCAR ESTA LOCALIZAÇAO" + location);
                                         updateCarLocation(location);
