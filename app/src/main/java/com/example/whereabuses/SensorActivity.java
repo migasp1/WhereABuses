@@ -141,7 +141,7 @@ public class SensorActivity extends AppCompatActivity {
                             System.out.println("LOCALIZAÇAO DO UTILIZADOR" + userLocation);
                             GeoPoint geoPoint = new GeoPoint(userLocation.getLatitude(),userLocation.getLongitude());
                             Map<String,Object> locData = new HashMap<>();
-                            locData.put("731-3", geoPoint);
+                            locData.put("731-4", geoPoint);
                             documentReference.set(locData).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(@NonNull Void unused) {
