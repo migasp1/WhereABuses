@@ -226,26 +226,29 @@ public class MapsFragment extends Fragment {
     DocumentReference documentReference = rootRef.collection("731").document("buses");
 
     private void showMovingBus(){
-
         final Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable =
                 new Runnable(){
                     public void run(){
-                        rootRef.collection("731").document("Buses")
-                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(@NonNull DocumentSnapshot documentSnapshot) {
-                                if(documentSnapshot.exists()){
-                                    GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("731-1");
-                                    LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                                    System.out.println("FUI BUSCAR ESTA LOCALIZAÇAO" + location);
-                                    updateCarLocation(location);
+                        try {
+                            rootRef.collection("731").document("Buses")
+                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(@NonNull DocumentSnapshot documentSnapshot) {
+                                    if(documentSnapshot.exists()){
+                                        GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("731-4");
+                                        LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+                                        System.out.println("FUI BUSCAR ESTA LOCALIZAÇAO" + location);
+                                        updateCarLocation(location);
+                                    }
+
                                 }
+                            });
 
-                            }
-                        });
-
-                        handler.postDelayed(this, 20000);
+                            handler.postDelayed(this, 20000);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 };
         handler.postDelayed(runnable,1000);

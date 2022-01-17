@@ -91,7 +91,7 @@ public class SensorActivity extends AppCompatActivity {
                         .withBalancedPowerMode()
                         .build();
         ProximityZone zone = new ProximityZoneBuilder()
-                .forTag("whereabuses-3ap")
+                .forTag("Yellow")
                 .inCustomRange(1)
                 .onEnter(new Function1<ProximityZoneContext, Unit>() {
                     @Override
@@ -138,19 +138,19 @@ public class SensorActivity extends AppCompatActivity {
                     public void run(){
                         getLastLocation();
                         if(userLocation!=null){
-                            System.out.println("LOCALIZAÇAO DO UTILIZADOR" + userLocation);
+                            //System.out.println("LOCALIZAÇAO DO UTILIZADOR" + userLocation);
                             GeoPoint geoPoint = new GeoPoint(userLocation.getLatitude(),userLocation.getLongitude());
                             Map<String,Object> locData = new HashMap<>();
-                            locData.put("731-3", geoPoint);
+                            locData.put("731-4", geoPoint);
                             documentReference.set(locData).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(@NonNull Void unused) {
-                                    System.out.println("SUCESSO A ENVIAR PARA FIREBASE");
+                                    //System.out.println("SUCESSO A ENVIAR PARA FIREBASE");
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    System.out.println("PROBLEMA A ENVIAR PARA FIREBASE");
+                                    //System.out.println("PROBLEMA A ENVIAR PARA FIREBASE");
                                 }
                             });
                         }
