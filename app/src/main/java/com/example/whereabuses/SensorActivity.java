@@ -70,6 +70,8 @@ public class SensorActivity extends AppCompatActivity {
         busList.setAdapter(adapter);
         busList.setLayoutManager(new LinearLayoutManager(this));
 
+        System.out.println(busList.findFocus());
+
         //ENVIAR LOCALIZAÇAO PARA FIREBASE
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 

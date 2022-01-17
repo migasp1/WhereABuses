@@ -28,7 +28,15 @@ public class BusesAdapter extends RecyclerView.Adapter<BusesAdapter.ViewHolder>{
 
             nameTextView = (TextView) itemView.findViewById(R.id.carreira_textview);
             messageButton = (Button) itemView.findViewById(R.id.message_button);
+            messageButton.setOnClickListener(new Button.OnClickListener(){
+                public void onClick(View view){
+                    String string=nameTextView.toString();
+                    System.out.println("BUTTON CLICKED:" + string);
+                }
+            });
         }
+
+
     }
     // Store a member variable for the contacts
     private List<Bus> mBuses;
@@ -61,7 +69,7 @@ public class BusesAdapter extends RecyclerView.Adapter<BusesAdapter.ViewHolder>{
         TextView textView = holder.nameTextView;
         textView.setText(Integer.toString(bus.getCarreira()));
         Button button = holder.messageButton;
-        button.setText("ESCOLHER");
+        button.setText("ESCOLHER" + position);
     }
 
     // Returns the total count of items in the list
@@ -69,4 +77,5 @@ public class BusesAdapter extends RecyclerView.Adapter<BusesAdapter.ViewHolder>{
     public int getItemCount() {
         return mBuses.size();
     }
+
 }
