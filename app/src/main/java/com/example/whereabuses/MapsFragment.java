@@ -19,7 +19,6 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupWindow;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -52,10 +51,6 @@ public class MapsFragment extends Fragment {
     private LatLng previousLatLng;
     private LatLng currentLatLng;
     int index = 0;
-    private Marker mMarker;
-    private PopupWindow mPopupWindow;
-    private int mWidth;
-    private int mHeight;
 
 
 
@@ -241,7 +236,7 @@ public class MapsFragment extends Fragment {
                             @Override
                             public void onSuccess(@NonNull DocumentSnapshot documentSnapshot) {
                                 if(documentSnapshot.exists()){
-                                    GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("731-4");
+                                    GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("731-1");
                                     LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
                                     System.out.println("FUI BUSCAR ESTA LOCALIZAÇAO" + location);
                                     updateCarLocation(location);
