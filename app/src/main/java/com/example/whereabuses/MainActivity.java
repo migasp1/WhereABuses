@@ -5,6 +5,9 @@ import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -51,6 +54,24 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.buses_app_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (findViewById(R.id.mainLayout) != null) {
+            switch (item.getItemId()) {
+                case R.id.optionSettings:
+                    Intent optionsIntent = new Intent(this, Settings.class);
+                    startActivity(optionsIntent);
+            }
+        }
+        return true;
     }
 
 
