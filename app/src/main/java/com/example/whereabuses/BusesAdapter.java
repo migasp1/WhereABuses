@@ -1,6 +1,7 @@
 package com.example.whereabuses;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ public class BusesAdapter extends RecyclerView.Adapter<BusesAdapter.ViewHolder>{
             messageButton = (Button) itemView.findViewById(R.id.message_button);
             messageButton.setOnClickListener(new Button.OnClickListener(){
                 public void onClick(View view){
+                    Intent busActivityIntent = new Intent(view.getContext(), InsideBusActivity.class);
+                    view.getContext().startActivity(busActivityIntent);
                     String string=nameTextView.toString();
                     System.out.println("BUTTON CLICKED:" + string);
                 }
