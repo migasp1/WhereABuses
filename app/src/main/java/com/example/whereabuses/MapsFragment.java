@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -253,7 +254,8 @@ public class MapsFragment extends Fragment {
     };
 
     FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-    DocumentReference documentReference = rootRef.collection("731").document("buses");
+    GoogleMapsActivity activity =(GoogleMapsActivity) getActivity();
+    DocumentReference documentReference = rootRef.collection(activity.getCarreira()).document("buses");
 
     private void showMovingBus(){
 
@@ -262,15 +264,19 @@ public class MapsFragment extends Fragment {
                 new Runnable(){
                     public void run(){
                         try {
-                            rootRef.collection("731").document("Buses")
+                            rootRef.collection("731").document("Bus1")
                                     .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(@NonNull DocumentSnapshot documentSnapshot) {
                                     if(documentSnapshot.exists()){
-                                        GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("731-4");
-                                        LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                                        System.out.println("FUI BUSCAR ESTA LOCALIZAÇAO" + location);
-                                        updateCarLocation(location);
+                                        if(documentSnapshot.getData()!=null) {
+                                            GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("local");
+                                            LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+                                            System.out.println("FUI BUSCAR ESTA LOCALIZAÇAO" + location);
+                                            updateCarLocation(location);
+                                        }else{
+                                            System.out.println("LOL NOPE");
+                                        }
                                     }
 
                                 }

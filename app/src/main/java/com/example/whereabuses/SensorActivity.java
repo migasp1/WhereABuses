@@ -52,21 +52,20 @@ import kotlin.jvm.functions.Function1;
 public class SensorActivity extends AppCompatActivity {
     private ProximityObserver proximityObserver;
     private RecyclerView busList;
-    ArrayList<Bus> buses;
+    public ArrayList<Bus> buses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensor);
 
-        final ProgressBar simpleProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+
         busList = (RecyclerView) findViewById(R.id.busList);
         buses= Bus.createBuses(2);
         BusesAdapter adapter = new BusesAdapter(buses);
         busList.setAdapter(adapter);
         busList.setLayoutManager(new LinearLayoutManager(this));
 
-        System.out.println(busList.findFocus());
 
         //SENSORES
         EstimoteCloudCredentials cloudCredentials = new EstimoteCloudCredentials("whereabuses-3ap", "205f284382a9f4775cd8a0251221a6f1");
@@ -82,8 +81,8 @@ public class SensorActivity extends AppCompatActivity {
                         .withBalancedPowerMode()
                         .build();
         ProximityZone zone = new ProximityZoneBuilder()
-                .forTag("Yellow")
-                .inCustomRange(1)
+                .forTag("Pink")
+                .inCustomRange(5)
                 .onEnter(new Function1<ProximityZoneContext, Unit>() {
                     @Override
                     public Unit invoke(ProximityZoneContext context) {
@@ -101,19 +100,12 @@ public class SensorActivity extends AppCompatActivity {
                         return null;
                     }
                 })
-                .onContextChange(new Function1<Set<? extends ProximityZoneContext>, Unit>() {
-                    @Override
-                    public Unit invoke(Set<? extends ProximityZoneContext> contexts) {
-                        //String tag = contexts.getTag();
-                        Bus bus=new Bus(10,310);
-                        buses.add(bus);
-                        System.out.println( "Welcome to "  + "'s desk");
-
-                        return null;
-                    }
-                })
                 .build();
         proximityObserver.startObserving(zone);
+        System.out.println("ZONA: "+zone.getTag());
 
+    }
+    public ArrayList<Bus> getBuses(){
+        return buses;
     }
 }

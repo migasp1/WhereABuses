@@ -47,15 +47,18 @@ public class InsideBusActivity extends AppCompatActivity {
 
     FusedLocationProviderClient mFusedLocationClient;
     int PERMISSION_ID = 44;
+    String carreira;
     FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-    DocumentReference documentReference = rootRef.collection("731").document("Buses");
+    DocumentReference documentReference;
     Location userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inside_bus);
-
+        Bundle bundle = getIntent().getExtras();
+        carreira = bundle.getString("Carreira");
+        documentReference = rootRef.collection(carreira).document("Bus1");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         // method to get the location
@@ -102,7 +105,7 @@ public class InsideBusActivity extends AppCompatActivity {
                             //System.out.println("LOCALIZAÇAO DO UTILIZADOR" + userLocation);
                             GeoPoint geoPoint = new GeoPoint(userLocation.getLatitude(),userLocation.getLongitude());
                             Map<String,Object> locData = new HashMap<>();
-                            locData.put("731-4", geoPoint);
+                            locData.put("local2", geoPoint);
                             documentReference.set(locData).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(@NonNull Void unused) {
@@ -182,6 +185,8 @@ public class InsideBusActivity extends AppCompatActivity {
         }
     };
 
+
+
     // method to check for permissions
     private boolean checkPermissions() {
         return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -191,6 +196,7 @@ public class InsideBusActivity extends AppCompatActivity {
         // use:
         // ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
+
 
     // method to request for permissions
     private void requestPermissions() {

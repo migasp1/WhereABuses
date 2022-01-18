@@ -30,7 +30,7 @@ public class Bus {
     public static ArrayList<Bus> createBuses(int n){
         ArrayList<Bus> buses = new ArrayList<Bus>();
         for (int i = 1; i <= n; i++) {
-            buses.add(new Bus(i, 100+i));
+            buses.add(new Bus(i, 700+i-1));
         }
 
         return buses;

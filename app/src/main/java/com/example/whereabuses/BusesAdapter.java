@@ -19,7 +19,7 @@ public class BusesAdapter extends RecyclerView.Adapter<BusesAdapter.ViewHolder>{
         // for any view that will be set as you render a row
         public TextView nameTextView;
         public Button messageButton;
-
+        public int nCarreira;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(View itemView) {
@@ -32,8 +32,10 @@ public class BusesAdapter extends RecyclerView.Adapter<BusesAdapter.ViewHolder>{
             messageButton.setOnClickListener(new Button.OnClickListener(){
                 public void onClick(View view){
                     Intent busActivityIntent = new Intent(view.getContext(), InsideBusActivity.class);
+                    String  string=nameTextView.getText().toString();
+                    busActivityIntent.putExtra("Carreira",string);
                     view.getContext().startActivity(busActivityIntent);
-                    String string=nameTextView.toString();
+
                     System.out.println("BUTTON CLICKED:" + string);
                 }
             });
@@ -72,7 +74,7 @@ public class BusesAdapter extends RecyclerView.Adapter<BusesAdapter.ViewHolder>{
         TextView textView = holder.nameTextView;
         textView.setText(Integer.toString(bus.getCarreira()));
         Button button = holder.messageButton;
-        button.setText("ESCOLHER" + position);
+        button.setText("ESCOLHER");
     }
 
     // Returns the total count of items in the list
