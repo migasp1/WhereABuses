@@ -46,6 +46,7 @@ import java.util.Map;
 
 import Utils.AnimationUtils;
 import Utils.MapUtils;
+import io.grpc.internal.JsonUtil;
 
 public class MapsFragment extends Fragment {
     private GoogleMap mMap;
@@ -56,8 +57,7 @@ public class MapsFragment extends Fragment {
     private LatLng previousLatLng;
     private LatLng currentLatLng;
     int index = 0;
-
-
+    private Handler handler;
 
     String provider;
     private final long MIN_TIME = 1000;
@@ -65,6 +65,7 @@ public class MapsFragment extends Fragment {
     double lat1;
     double lon1;
     Dialog materialDialog;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -211,7 +212,6 @@ public class MapsFragment extends Fragment {
                 public void run() {
 
                     showMovingBus();
-                    System.out.println("AAAAAAAAAAAAAA");
                 }
             }, 3000);
 
@@ -253,46 +253,53 @@ public class MapsFragment extends Fragment {
 
     };
 
-    FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-    GoogleMapsActivity activity =(GoogleMapsActivity) getActivity();
-    DocumentReference documentReference = rootRef.collection(activity.getCarreira()).document("buses");
+    volatile boolean shutdown = false;
 
-    private void showMovingBus(){
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(null);
+        handler = null;
+    }
 
-        final Handler handler = new Handler(Looper.getMainLooper());
+    private void showMovingBus() {
+        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+        GoogleMapsActivity activity = (GoogleMapsActivity) getActivity();
+
+        //DocumentReference documentReference = rootRef.collection(activity.getCarreira()).document("Bus1");
+        handler = new Handler(Looper.getMainLooper());
         Runnable runnable =
-                new Runnable(){
-                    public void run(){
+                new Runnable() {
+                    public void run() {
                         try {
-                            rootRef.collection("731").document("Bus1")
-                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            rootRef.collection(activity.getCarreira()).document("Bus1").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(@NonNull DocumentSnapshot documentSnapshot) {
-                                    if(documentSnapshot.exists()){
-                                        if(documentSnapshot.getData()!=null) {
-                                            GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("local");
+                                    if (documentSnapshot.exists()) {
+                                        if (documentSnapshot.getData() != null) {
+                                            GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("local2");
                                             LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
                                             System.out.println("FUI BUSCAR ESTA LOCALIZAÇAO" + location);
                                             updateCarLocation(location);
-                                        }else{
-                                            System.out.println("LOL NOPE");
+                                        } else {
+
                                         }
                                     }
 
                                 }
                             });
 
-                            handler.postDelayed(this, 20000);
+                            handler.postDelayed(this, 5000);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                 };
-        handler.postDelayed(runnable,1000);
+        handler.postDelayed(runnable, 1000);
 
     }
 
-    private void updateCarLocation(LatLng latLngCar){
+    private void updateCarLocation(LatLng latLngCar) {
         if (movingCabMarker == null) {
             movingCabMarker = addCarMarkerAndGet(latLngCar);
         }
@@ -308,16 +315,16 @@ public class MapsFragment extends Fragment {
             System.out.println(previousLatLng);
             System.out.println(currentLatLng);
             ValueAnimator valueAnimator = AnimationUtils.carAnimator();
-            valueAnimator.addUpdateListener (valueAnimator1 -> {
-            if (currentLatLng != null && previousLatLng != null) {
-                Float multiplier = valueAnimator1.getAnimatedFraction();
-                LatLng nextLocation = new LatLng(
-                        multiplier * currentLatLng.latitude + (1 - multiplier) * previousLatLng.latitude,
-                        multiplier * currentLatLng.longitude + (1 - multiplier) * previousLatLng.longitude
-                );
-                movingCabMarker.setPosition(nextLocation);
-                movingCabMarker.setAnchor(0.5f, 0.5f);
-            }
+            valueAnimator.addUpdateListener(valueAnimator1 -> {
+                if (currentLatLng != null && previousLatLng != null) {
+                    Float multiplier = valueAnimator1.getAnimatedFraction();
+                    LatLng nextLocation = new LatLng(
+                            multiplier * currentLatLng.latitude + (1 - multiplier) * previousLatLng.latitude,
+                            multiplier * currentLatLng.longitude + (1 - multiplier) * previousLatLng.longitude
+                    );
+                    movingCabMarker.setPosition(nextLocation);
+                    movingCabMarker.setAnchor(0.5f, 0.5f);
+                }
 
             });
             valueAnimator.start();
@@ -325,14 +332,10 @@ public class MapsFragment extends Fragment {
 
     }
 
-    private Marker addCarMarkerAndGet(LatLng latLngCar){
-        BitmapDescriptor bitmapDescriptor=BitmapDescriptorFactory.fromBitmap(MapUtils.getBusIcon(getContext()));
+    private Marker addCarMarkerAndGet(LatLng latLngCar) {
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(MapUtils.getBusIcon(getContext()));
         return mMap.addMarker(new MarkerOptions().position(latLngCar).flat(true).icon(bitmapDescriptor));
     }
-
-
-
-
 
 
 }

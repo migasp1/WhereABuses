@@ -51,6 +51,7 @@ public class InsideBusActivity extends AppCompatActivity {
     FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     DocumentReference documentReference;
     Location userLocation;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,31 +95,41 @@ public class InsideBusActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(null);
+        handler = null;
+    }
 
     private void sendLocation() {
-        final Handler handler = new Handler(Looper.getMainLooper());
+        handler = new Handler(Looper.getMainLooper());
         Runnable runnable =
                 new Runnable(){
-                    public void run(){
-                        getLastLocation();
-                        if(userLocation!=null){
-                            //System.out.println("LOCALIZAÇAO DO UTILIZADOR" + userLocation);
-                            GeoPoint geoPoint = new GeoPoint(userLocation.getLatitude(),userLocation.getLongitude());
-                            Map<String,Object> locData = new HashMap<>();
-                            locData.put("local2", geoPoint);
-                            documentReference.set(locData).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(@NonNull Void unused) {
-                                    //System.out.println("SUCESSO A ENVIAR PARA FIREBASE");
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    //System.out.println("PROBLEMA A ENVIAR PARA FIREBASE");
-                                }
-                            });
+                    public void run() {
+                        try {
+                            getLastLocation();
+                            if (userLocation != null) {
+                                System.out.println("LOCALIZAÇAO DO UTILIZADOR" + userLocation);
+                                GeoPoint geoPoint = new GeoPoint(userLocation.getLatitude(), userLocation.getLongitude());
+                                Map<String, Object> locData = new HashMap<>();
+                                locData.put("local2", geoPoint);
+                                documentReference.set(locData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(@NonNull Void unused) {
+                                        System.out.println("SUCESSO A ENVIAR PARA FIREBASE");
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        System.out.println("PROBLEMA A ENVIAR PARA FIREBASE");
+                                    }
+                                });
+                            }
+                            handler.postDelayed(this, 5000);
+                        }catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        handler.postDelayed(this, 5000);
                     }
                 };
         handler.postDelayed(runnable,1000);

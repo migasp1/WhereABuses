@@ -20,6 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     DocumentReference documentReference = rootRef.collection("Carreiras").document("Routes");
     String item;
-    List<String> carreiras = new ArrayList<>();
+    List<String> carreiras = new ArrayList<>(Arrays.asList("Seleciona uma opção"));
     Spinner spinner;
 
     @Override
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                     }
                 });
+
         adapter.notifyDataSetChanged();
 
     }
@@ -93,7 +95,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     public void searchButton(View view){
-
         Intent mapIntent = new Intent(this, GoogleMapsActivity.class);
         mapIntent.putExtra("carreira",item);
         startActivity(mapIntent);
@@ -105,12 +106,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+        item = spinner.getSelectedItem().toString();
         System.out.println(spinner.getSelectedItem().toString());
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 }

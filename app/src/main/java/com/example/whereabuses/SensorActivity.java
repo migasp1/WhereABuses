@@ -61,7 +61,7 @@ public class SensorActivity extends AppCompatActivity {
 
 
         busList = (RecyclerView) findViewById(R.id.busList);
-        buses= Bus.createBuses(2);
+        buses= Bus.createBuses(6);
         BusesAdapter adapter = new BusesAdapter(buses);
         busList.setAdapter(adapter);
         busList.setLayoutManager(new LinearLayoutManager(this));
