@@ -1,12 +1,18 @@
 package com.example.whereabuses;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -15,6 +21,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -22,6 +31,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,7 +51,6 @@ public class InsideBusActivity extends AppCompatActivity {
     DocumentReference documentReference = rootRef.collection("731").document("Buses");
     Location userLocation;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +60,37 @@ public class InsideBusActivity extends AppCompatActivity {
 
         // method to get the location
         sendLocation();
+
+
+        Button button = findViewById(R.id.alertButton);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                InsideBusMapFragment ibmapfragment = (InsideBusMapFragment) fragmentManager.findFragmentByTag("mapFragment");
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setTitle("Warnings");
+                builder.setItems(new CharSequence[]
+                                {"Accident", "Slow traffic"},
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        ibmapfragment.setMarkerOnMap(0);
+                                        break;
+                                    case 1:
+                                        ibmapfragment.setMarkerOnMap(1);
+                                        break;
+                                }
+                            }
+                        });
+                builder.create().show();
+            }
+        });
     }
+
 
     private void sendLocation() {
         final Handler handler = new Handler(Looper.getMainLooper());

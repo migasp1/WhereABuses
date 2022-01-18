@@ -1,9 +1,12 @@
 package com.example.whereabuses;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,14 +23,24 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
+import Utils.MapUtils;
+
+//Inside fragment container
 public class InsideBusMapFragment extends Fragment {
 
     private GoogleMap mMap;
@@ -38,7 +51,28 @@ public class InsideBusMapFragment extends Fragment {
     private final float MIN_DISTANCE = 0.5F;
     double lat1;
     double lon1;
+    private Location myLocation;
     private LatLng latLng;
+    public ArrayList<MarkerOptions> locationArrayList = new ArrayList<MarkerOptions>();
+
+    public void setMarkerOnMap(int input){
+        BitmapDescriptor slowTraffic =BitmapDescriptorFactory.fromBitmap(MapUtils.getSlowTrafficIcon(getContext()));
+        BitmapDescriptor crash =BitmapDescriptorFactory.fromBitmap(MapUtils.getAccidentIcon(getContext()));
+        switch (input) {
+            case 0:
+                if(latLng != null) {
+                    MarkerOptions mo = new MarkerOptions().position(latLng).icon(crash);
+                    mMap.addMarker(mo);
+                }
+                break;
+            case 1:
+                if(latLng != null) {
+                    MarkerOptions mo = new MarkerOptions().position(latLng).icon(slowTraffic);
+                    mMap.addMarker(mo);
+                }
+                break;
+        }
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -82,7 +116,6 @@ public class InsideBusMapFragment extends Fragment {
                     latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
                 }
-
             };
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -119,7 +152,7 @@ public class InsideBusMapFragment extends Fragment {
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            Location myLocation = lm.getLastKnownLocation(provider);
+            myLocation = lm.getLastKnownLocation(provider);
 
 
             if (myLocation == null) {
