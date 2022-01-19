@@ -93,6 +93,14 @@ public class InsideBusActivity extends AppCompatActivity {
                 builder.create().show();
             }
         });
+        Button buttonMessage = findViewById(R.id.chatButton);
+        buttonMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(),ChatActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

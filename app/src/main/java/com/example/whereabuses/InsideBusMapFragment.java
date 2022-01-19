@@ -57,9 +57,12 @@ public class InsideBusMapFragment extends Fragment {
     public ArrayList<MarkerOptions> locationArrayList = new ArrayList<MarkerOptions>();
     FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     int counter = 0;
-    DocumentReference documentReference = rootRef.collection("731").document("Markers");
+
 
     public void setMarkerOnMap(int input){
+        InsideBusActivity activity = (InsideBusActivity) getActivity();
+        String carreira2 = activity.carreira;
+        DocumentReference documentReference = rootRef.collection(carreira2).document("Markers");
         BitmapDescriptor slowTraffic =BitmapDescriptorFactory.fromBitmap(MapUtils.getSlowTrafficIcon(getContext()));
         BitmapDescriptor crash =BitmapDescriptorFactory.fromBitmap(MapUtils.getAccidentIcon(getContext()));
         switch (input) {
