@@ -188,7 +188,6 @@ public class InsideBusMapFragment extends Fragment {
             criteria.setAccuracy(Criteria.ACCURACY_COARSE);
             provider = lm.getBestProvider(criteria, true);
 
-            //Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }

@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -211,7 +212,12 @@ public class MapsFragment extends Fragment {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Autocarro " + activity.getCarreira());
                         builder.setItems(new CharSequence[]{ "Lotação Máxima: 71"}, null)
-                                .setPositiveButton("Ir para a sala de chat",null)
+                                .setPositiveButton("Ir para a sala de chat", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(activity.getApplicationContext(),ChatActivity.class);
+                                        startActivity(intent);
+                                    }
+                                })
                                 .setIcon(R.drawable.busicon);
                         builder.create().show();
                     }
