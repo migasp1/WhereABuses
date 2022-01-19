@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -38,7 +39,7 @@ public class Chat_Room extends AppCompatActivity {
         chat_conversation = (TextView) findViewById(R.id.textView1);
         Bundle bundle = getIntent().getExtras();
         user_name = bundle.getString("user_name");
-
+        input_msg.setBackgroundColor(Color.parseColor("#FFA500"));
         room_name = bundle.getString("room_name");
         setTitle("Room - " + room_name);
         root = FirebaseDatabase.getInstance().getReference().child(room_name);
@@ -53,6 +54,7 @@ public class Chat_Room extends AppCompatActivity {
                 map2.put("name",user_name);
                 map2.put("msg",input_msg.getText().toString());
                 message_root.updateChildren(map2);
+                input_msg.setText("");
             }
         });
         root.addChildEventListener(new ChildEventListener() {
