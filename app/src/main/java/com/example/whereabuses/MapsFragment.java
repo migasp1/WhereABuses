@@ -266,10 +266,11 @@ public class MapsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacks(null);
-        handler = null;
         handler2.removeCallbacks(null);
         handler2 = null;
+        handler.removeCallbacks(null);
+        handler = null;
+
     }
 
     private void showMovingBus() {
@@ -308,30 +309,40 @@ public class MapsFragment extends Fragment {
         handler.postDelayed(runnable, 1000);
 
     }
-    private void setMarker(LatLng latLngM, String type){
-        BitmapDescriptor slowTraffic =BitmapDescriptorFactory.fromBitmap(MapUtils.getSlowTrafficIcon(getContext()));
-        BitmapDescriptor crash =BitmapDescriptorFactory.fromBitmap(MapUtils.getAccidentIcon(getContext()));
-        switch (type) {
-            case "Acidente":
-                if(latLngM != null) {
 
-                    MarkerOptions mo = new MarkerOptions().title(type).position(latLngM).icon(crash);
-                    mMap.addMarker(mo);
-
-
-                }
-                break;
-            case "Trânsito":
-                if(latLngM != null) {
-                    MarkerOptions mo = new MarkerOptions().title(type).position(latLngM).icon(slowTraffic);
-                    mMap.addMarker(mo);
-
-                break;
+    private void setMarker(LatLng latLngM, String type) {
+        BitmapDescriptor slowTraffic = null;
+        BitmapDescriptor crash = null;
+        try {
+            slowTraffic = BitmapDescriptorFactory.fromBitmap(MapUtils.getSlowTrafficIcon(getContext()));
+            crash = BitmapDescriptorFactory.fromBitmap(MapUtils.getAccidentIcon(getContext()));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        if (slowTraffic == null || crash == null) {
+            return;
+        } else {
+            switch (type) {
+                case "Acidente":
+                    if (latLngM != null) {
+
+                        MarkerOptions mo = new MarkerOptions().title(type).position(latLngM).icon(crash);
+                        mMap.addMarker(mo);
+                    }
+                    break;
+                case "Trânsito":
+                    if (latLngM != null) {
+                        MarkerOptions mo = new MarkerOptions().title(type).position(latLngM).icon(slowTraffic);
+                        mMap.addMarker(mo);
+
+                        break;
+                    }
+            }
+        }
+
     }
 
-}
-    private void getMarkers(){
+    private void getMarkers() {
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
         GoogleMapsActivity activity = (GoogleMapsActivity) getActivity();
         handler2 = new Handler(Looper.getMainLooper());
@@ -345,13 +356,13 @@ public class MapsFragment extends Fragment {
                                     if (documentSnapshot.exists()) {
                                         if (documentSnapshot.getData() != null) {
 
-                                            Map<String,Object> map =  documentSnapshot.getData();
+                                            Map<String, Object> map = documentSnapshot.getData();
 
                                             Iterator<Map.Entry<String, Object>> itr = map.entrySet().iterator();
-                                            while(itr.hasNext()){
-                                                HashMap<String,Map.Entry<String, GeoPoint>> entry =(HashMap<String,Map.Entry<String, GeoPoint>>) itr.next().getValue();
-                                                System.out.println( entry.get("key") + "KEY KEY KEY");
-                                                System.out.println( entry.get("value") + "VALUE VALUE VALUE");
+                                            while (itr.hasNext()) {
+                                                HashMap<String, Map.Entry<String, GeoPoint>> entry = (HashMap<String, Map.Entry<String, GeoPoint>>) itr.next().getValue();
+                                                System.out.println(entry.get("key") + "KEY KEY KEY");
+                                                System.out.println(entry.get("value") + "VALUE VALUE VALUE");
 
                                                 /* String key = entry.get("key") ; */
                                                 Object objeto = entry.get("key");
@@ -359,12 +370,12 @@ public class MapsFragment extends Fragment {
                                                 GeoPoint tab = (GeoPoint) entry.get("value");
                                                 System.out.println(tab);
 
-                                               LatLng latLngM = new LatLng(tab.getLatitude(),tab.getLongitude());
-                                                setMarker(latLngM,key);
+                                                LatLng latLngM = new LatLng(tab.getLatitude(), tab.getLongitude());
+                                                setMarker(latLngM, key);
                                             }
 
                                         } else {
-                                                System.out.println("LOL NOPE");
+                                            System.out.println("LOL NOPE");
                                         }
                                     }
 

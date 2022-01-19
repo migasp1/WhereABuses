@@ -14,16 +14,25 @@ import java.util.ArrayList;
 public class MapUtils {
 
     public static Bitmap getBusIcon(Context context){
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.busicon);
-        return Bitmap.createScaledBitmap(bitmap, 50, 50, false);
+        if(context != null) {
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.busicon);
+            return Bitmap.createScaledBitmap(bitmap, 50, 50, false);
+        }
+        return null;
     }
     public static Bitmap getAccidentIcon(Context context){
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.carcrash);
-        return Bitmap.createScaledBitmap(bitmap, 50, 50, false);
+        if(context != null) {
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.carcrash);
+            return Bitmap.createScaledBitmap(bitmap, 50, 50, false);
+        }
+        return null;
     }
 
     public static Bitmap getSlowTrafficIcon(Context context){
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.trafficjam);
-        return Bitmap.createScaledBitmap(bitmap, 50, 50, false);
+        if(context != null) {
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.trafficjam);
+            return Bitmap.createScaledBitmap(bitmap, 50, 50, false);
+        }
+        return null;
     }
 }
