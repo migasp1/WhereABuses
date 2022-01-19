@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         item = spinner.getSelectedItem().toString();
-        System.out.println(spinner.getSelectedItem().toString());
     }
 
     @Override

@@ -35,8 +35,6 @@ public class BusesAdapter extends RecyclerView.Adapter<BusesAdapter.ViewHolder>{
                     String  string=nameTextView.getText().toString();
                     busActivityIntent.putExtra("Carreira",string);
                     view.getContext().startActivity(busActivityIntent);
-
-                    System.out.println("BUTTON CLICKED:" + string);
                 }
             });
         }

@@ -80,13 +80,12 @@ public class InsideBusMapFragment extends Fragment {
                     documentReference.set(actionMap, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(@NonNull Void unused) {
-                            //System.out.println("SUCESSO A ENVIAR PARA FIREBASE");
+
                             counter++;
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            //System.out.println("PROBLEMA A ENVIAR PARA FIREBASE");
                         }
                     });
 
@@ -141,15 +140,7 @@ public class InsideBusMapFragment extends Fragment {
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
+
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
@@ -217,13 +208,7 @@ public class InsideBusMapFragment extends Fragment {
                 lat1 = myLocation.getLatitude();
                 lon1 = myLocation.getLongitude();
 
-            /*mMap.addMarker(new MarkerOptions()
-                    .position(userLocation)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                    .title("Welcome")
-                    .snippet("Latitude:" + lat1 + ",Longitude:" + lon1)
 
-            );*/
 
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 18), 1500, null);
 
@@ -231,17 +216,12 @@ public class InsideBusMapFragment extends Fragment {
                     @Override
                     public void onLocationChanged(Location myLocation) {
 
-                        // Getting latitude of the current location
                         double latitude = myLocation.getLatitude();
 
-                        // Getting longitude of the current location
                         double longitude = myLocation.getLongitude();
 
-                        // Creating a LatLng object for the current location
                         LatLng latLng = new LatLng(latitude, longitude);
 
-                        // Showing the current location in Google Map
-                        //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
                     }
                 });

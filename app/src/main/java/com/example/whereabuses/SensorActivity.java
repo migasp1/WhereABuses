@@ -102,7 +102,6 @@ public class SensorActivity extends AppCompatActivity {
                 })
                 .build();
         proximityObserver.startObserving(zone);
-        System.out.println("ZONA: "+zone.getTag());
 
     }
     public ArrayList<Bus> getBuses(){

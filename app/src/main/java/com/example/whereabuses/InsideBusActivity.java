@@ -118,19 +118,19 @@ public class InsideBusActivity extends AppCompatActivity {
                         try {
                             getLastLocation();
                             if (userLocation != null) {
-                                System.out.println("LOCALIZAÇAO DO UTILIZADOR" + userLocation);
+
                                 GeoPoint geoPoint = new GeoPoint(userLocation.getLatitude(), userLocation.getLongitude());
                                 Map<String, Object> locData = new HashMap<>();
                                 locData.put("local2", geoPoint);
                                 documentReference.set(locData).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(@NonNull Void unused) {
-                                        System.out.println("SUCESSO A ENVIAR PARA FIREBASE");
+
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        System.out.println("PROBLEMA A ENVIAR PARA FIREBASE");
+
                                     }
                                 });
                             }

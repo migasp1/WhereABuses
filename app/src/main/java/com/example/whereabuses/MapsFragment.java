@@ -105,7 +105,6 @@ public class MapsFragment extends Fragment {
                 @Override
                 public void onLocationChanged(@NonNull Location location) {
                     latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
                 }
 
             };
@@ -140,7 +139,6 @@ public class MapsFragment extends Fragment {
             criteria.setAccuracy(Criteria.ACCURACY_COARSE);
             provider = lm.getBestProvider(criteria, true);
 
-            //Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
@@ -160,13 +158,7 @@ public class MapsFragment extends Fragment {
                 lat1 = myLocation.getLatitude();
                 lon1 = myLocation.getLongitude();
 
-            /*mMap.addMarker(new MarkerOptions()
-                    .position(userLocation)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
-                    .title("Welcome")
-                    .snippet("Latitude:" + lat1 + ",Longitude:" + lon1)
 
-            );*/
 
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userLocation, 18), 1500, null);
 
@@ -174,17 +166,12 @@ public class MapsFragment extends Fragment {
                     @Override
                     public void onLocationChanged(Location myLocation) {
 
-                        // Getting latitude of the current location
                         double latitude = myLocation.getLatitude();
 
-                        // Getting longitude of the current location
                         double longitude = myLocation.getLongitude();
 
-                        // Creating a LatLng object for the current location
                         LatLng latLng = new LatLng(latitude, longitude);
 
-                        // Showing the current location in Google Map
-                        //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
                     }
                 });
@@ -264,7 +251,6 @@ public class MapsFragment extends Fragment {
                                         if (documentSnapshot.getData() != null) {
                                             GeoPoint geoPoint = (GeoPoint) documentSnapshot.get("local2");
                                             LatLng location = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
-                                            System.out.println("FUI BUSCAR ESTA LOCALIZAÇAO" + location);
                                             updateCarLocation(location);
                                         } else {
 
@@ -335,21 +321,16 @@ public class MapsFragment extends Fragment {
                                             Iterator<Map.Entry<String, Object>> itr = map.entrySet().iterator();
                                             while (itr.hasNext()) {
                                                 HashMap<String, Map.Entry<String, GeoPoint>> entry = (HashMap<String, Map.Entry<String, GeoPoint>>) itr.next().getValue();
-                                                System.out.println(entry.get("key") + "KEY KEY KEY");
-                                                System.out.println(entry.get("value") + "VALUE VALUE VALUE");
 
-                                                /* String key = entry.get("key") ; */
                                                 Object objeto = entry.get("key");
                                                 String key = (String) objeto;
                                                 GeoPoint tab = (GeoPoint) entry.get("value");
-                                                System.out.println(tab);
 
                                                 LatLng latLngM = new LatLng(tab.getLatitude(), tab.getLongitude());
                                                 setMarker(latLngM, key);
                                             }
 
                                         } else {
-                                            System.out.println("LOL NOPE");
                                         }
                                     }
 
@@ -378,8 +359,6 @@ public class MapsFragment extends Fragment {
         } else {
             previousLatLng = currentLatLng;
             currentLatLng = latLngCar;
-            System.out.println(previousLatLng);
-            System.out.println(currentLatLng);
             ValueAnimator valueAnimator = AnimationUtils.carAnimator();
             valueAnimator.addUpdateListener(valueAnimator1 -> {
                 if (currentLatLng != null && previousLatLng != null) {
