@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -76,13 +77,17 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+        Activity activity = this;
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent intent = new Intent(getApplicationContext(),Chat_Room.class);
-                intent.putExtra("room_name",((TextView)view).getText().toString());
-                intent.putExtra("user_name ",name);
+                Intent intent = new Intent(activity.getApplicationContext(),Chat_Room.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("room_name",((TextView)view).getText().toString());
+                bundle.putString("user_name",name);
+                intent.putExtras(bundle);
+
                 startActivity(intent);
             }
         });

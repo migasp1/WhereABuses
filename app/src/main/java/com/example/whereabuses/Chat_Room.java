@@ -36,12 +36,12 @@ public class Chat_Room extends AppCompatActivity {
         btn_send_mdg = (Button) findViewById(R.id.btn_send);
         input_msg = (EditText) findViewById(R.id.msg_input);
         chat_conversation = (TextView) findViewById(R.id.textView1);
+        Bundle bundle = getIntent().getExtras();
+        user_name = bundle.getString("user_name");
 
-        user_name = getIntent().getExtras().get("user_name").toString();
-
-        room_name = getIntent().getExtras().get("room_name").toString();
+        room_name = bundle.getString("room_name");
         setTitle("Room - " + room_name);
-        root = FirebaseDatabase.getInstance().getReference().child("room_name");
+        root = FirebaseDatabase.getInstance().getReference().child(room_name);
         btn_send_mdg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
