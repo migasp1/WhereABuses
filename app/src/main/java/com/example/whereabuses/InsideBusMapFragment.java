@@ -108,13 +108,13 @@ public class InsideBusMapFragment extends Fragment {
                     documentReference.set(actionMap, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(@NonNull Void unused) {
-                            //System.out.println("SUCESSO A ENVIAR PARA FIREBASE");
+
                             counter++;
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            //System.out.println("PROBLEMA A ENVIAR PARA FIREBASE");
+
                         }
                     });
                 }
