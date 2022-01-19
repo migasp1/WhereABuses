@@ -5,12 +5,13 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backgroundmainactivity"
     tools:context=".MainActivity">
 
     <Spinner
         android:id="@+id/spinner"
-        android:layout_width="126dp"
-        android:layout_height="65dp"
+        android:layout_width="185dp"
+        android:layout_height="41dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,37 +19,11 @@
         app:layout_constraintVertical_bias="0.33"
         tools:ignore="SpeakableTextPresentCheck" />
 
-    <TextView
-        android:id="@+id/fromText"
-        android:layout_width="265dp"
-        android:layout_height="22dp"
-        android:layout_marginBottom="192dp"
-        android:text="From"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner"
-        app:layout_constraintVertical_bias="0.634" />
-
-    <TextView
-        android:id="@+id/fromText2"
-        android:layout_width="265dp"
-        android:layout_height="22dp"
-        android:layout_marginBottom="140dp"
-        android:text="To"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fromText"
-        app:layout_constraintVertical_bias="0.145" />
-
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="76dp"
         android:onClick="onBusButton"
         android:text="Estou num autocarro"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -71,11 +46,14 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:onClick="searchButton"
         android:text="Procurar"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fromText2" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintVertical_bias="0.94" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

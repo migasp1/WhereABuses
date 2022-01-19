@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationBarView;
@@ -63,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 });
 
         adapter.notifyDataSetChanged();
-
     }
 
     @Override
@@ -97,7 +97,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void searchButton(View view){
         Intent mapIntent = new Intent(this, GoogleMapsActivity.class);
         mapIntent.putExtra("carreira",item);
-        startActivity(mapIntent);
+        if(item == "Seleciona uma opção"){
+            Toast.makeText(getApplicationContext(), "Selecione uma carreira!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            startActivity(mapIntent);
+        }
+
     }
     public void onBusButton(View view){
         Intent sensorIntent = new Intent(this, SensorActivity.class);
