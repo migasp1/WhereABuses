@@ -41,7 +41,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        addRoom = (Button) findViewById(R.id.btn_add_room);
+
         room_name = (EditText) findViewById(R.id.msg_input);
         listView = (ListView) findViewById(R.id.listView);
 
@@ -49,15 +49,7 @@ public class ChatActivity extends AppCompatActivity {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,list_Rooms);
         listView.setAdapter(arrayAdapter);
         request_user_name();
-        addRoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Map<String,Object> map = new HashMap<String,Object>();
-                map.put(room_name.getText().toString(),"");
-                root.updateChildren(map);
 
-            }
-        });
         root.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
