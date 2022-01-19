@@ -1,12 +1,8 @@
 package com.example.whereabuses;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -18,13 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,7 +30,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.SetOptions;
@@ -66,7 +57,7 @@ public class InsideBusMapFragment extends Fragment {
     public ArrayList<MarkerOptions> locationArrayList = new ArrayList<MarkerOptions>();
     FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
     int counter = 0;
-    DocumentReference documentReference = rootRef.collection("730").document("Markers");
+    DocumentReference documentReference = rootRef.collection("731").document("Markers");
 
     public void setMarkerOnMap(int input){
         BitmapDescriptor slowTraffic =BitmapDescriptorFactory.fromBitmap(MapUtils.getSlowTrafficIcon(getContext()));
@@ -77,9 +68,9 @@ public class InsideBusMapFragment extends Fragment {
 
                     MarkerOptions mo = new MarkerOptions().title("Acidente").position(latLng).icon(crash);
                     GeoPoint markerlocal = new GeoPoint(latLng.latitude, latLng.longitude);
-                    Map<String, Map.Entry<GeoPoint, String>> actionMap = new HashMap<String, Map.Entry<GeoPoint, String>>();
-                    Map.Entry<GeoPoint,String> entry =
-                            new AbstractMap.SimpleEntry<GeoPoint, String>(markerlocal,"Acidente");
+                    Map<String, Map.Entry<String, GeoPoint>> actionMap = new HashMap<String, Map.Entry<String, GeoPoint>>();
+                    Map.Entry<String, GeoPoint> entry =
+                            new AbstractMap.SimpleEntry<String, GeoPoint>("Acidente",markerlocal);
 
                     actionMap.put("Marker" + counter ,entry);
                     mMap.addMarker(mo);
@@ -103,12 +94,15 @@ public class InsideBusMapFragment extends Fragment {
                     MarkerOptions mo = new MarkerOptions().title("Trânsito").position(latLng).icon(slowTraffic);
                     mMap.addMarker(mo);
                     GeoPoint markerlocal = new GeoPoint(latLng.latitude, latLng.longitude);
-                    Map<String, Map.Entry<GeoPoint, String>> actionMap = new HashMap<String, Map.Entry<GeoPoint, String>>();
-                    Map.Entry<GeoPoint,String> entry =
-                            new AbstractMap.SimpleEntry<GeoPoint, String>(markerlocal,"Trânsito");
+                    Map<String, Map.Entry<String, GeoPoint>> actionMap = new HashMap<String, Map.Entry<String, GeoPoint>>();
+                    Map.Entry<String, GeoPoint> entry =
+                            new AbstractMap.SimpleEntry<String, GeoPoint>("Trânsito",markerlocal);
 
                     actionMap.put("Marker" + counter ,entry);
+
                     mMap.addMarker(mo);
+
+
                     documentReference.set(actionMap, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(@NonNull Void unused) {

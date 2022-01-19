@@ -34,14 +34,20 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
+import java.lang.reflect.Array;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import Utils.AnimationUtils;
@@ -58,6 +64,7 @@ public class MapsFragment extends Fragment {
     private LatLng currentLatLng;
     int index = 0;
     private Handler handler;
+    private Handler handler2;
 
     String provider;
     private final long MIN_TIME = 1000;
@@ -212,6 +219,7 @@ public class MapsFragment extends Fragment {
                 public void run() {
 
                     showMovingBus();
+                    getMarkers();
                 }
             }, 3000);
 
@@ -260,6 +268,8 @@ public class MapsFragment extends Fragment {
         super.onDestroy();
         handler.removeCallbacks(null);
         handler = null;
+        handler2.removeCallbacks(null);
+        handler2 = null;
     }
 
     private void showMovingBus() {
@@ -297,6 +307,77 @@ public class MapsFragment extends Fragment {
                 };
         handler.postDelayed(runnable, 1000);
 
+    }
+    private void setMarker(LatLng latLngM, String type){
+        BitmapDescriptor slowTraffic =BitmapDescriptorFactory.fromBitmap(MapUtils.getSlowTrafficIcon(getContext()));
+        BitmapDescriptor crash =BitmapDescriptorFactory.fromBitmap(MapUtils.getAccidentIcon(getContext()));
+        switch (type) {
+            case "Acidente":
+                if(latLngM != null) {
+
+                    MarkerOptions mo = new MarkerOptions().title(type).position(latLngM).icon(crash);
+                    mMap.addMarker(mo);
+
+
+                }
+                break;
+            case "Trânsito":
+                if(latLngM != null) {
+                    MarkerOptions mo = new MarkerOptions().title(type).position(latLngM).icon(slowTraffic);
+                    mMap.addMarker(mo);
+
+                break;
+        }
+    }
+
+}
+    private void getMarkers(){
+        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+        GoogleMapsActivity activity = (GoogleMapsActivity) getActivity();
+        handler2 = new Handler(Looper.getMainLooper());
+        Runnable runnable =
+                new Runnable() {
+                    public void run() {
+                        try {
+                            rootRef.collection(activity.getCarreira()).document("Markers").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(@NonNull DocumentSnapshot documentSnapshot) {
+                                    if (documentSnapshot.exists()) {
+                                        if (documentSnapshot.getData() != null) {
+
+                                            Map<String,Object> map =  documentSnapshot.getData();
+
+                                            Iterator<Map.Entry<String, Object>> itr = map.entrySet().iterator();
+                                            while(itr.hasNext()){
+                                                HashMap<String,Map.Entry<String, GeoPoint>> entry =(HashMap<String,Map.Entry<String, GeoPoint>>) itr.next().getValue();
+                                                System.out.println( entry.get("key") + "KEY KEY KEY");
+                                                System.out.println( entry.get("value") + "VALUE VALUE VALUE");
+
+                                                /* String key = entry.get("key") ; */
+                                                Object objeto = entry.get("key");
+                                                String key = (String) objeto;
+                                                GeoPoint tab = (GeoPoint) entry.get("value");
+                                                System.out.println(tab);
+
+                                               LatLng latLngM = new LatLng(tab.getLatitude(),tab.getLongitude());
+                                                setMarker(latLngM,key);
+                                            }
+
+                                        } else {
+                                                System.out.println("LOL NOPE");
+                                        }
+                                    }
+
+                                }
+                            });
+
+                            handler2.postDelayed(this, 5000);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+        handler2.postDelayed(runnable, 1000);
     }
 
     private void updateCarLocation(LatLng latLngCar) {
