@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -34,38 +33,29 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 
-import java.lang.reflect.Array;
-import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import Utils.AnimationUtils;
 import Utils.MapUtils;
-import io.grpc.internal.JsonUtil;
 
 public class MapsFragment extends Fragment {
     private GoogleMap mMap;
     private LocationListener locationListener;
     private LocationManager locationManager;
     private LatLng latLng;
-    private Marker movingCabMarker;
+    private Marker movingBusMarker;
     private LatLng previousLatLng;
     private LatLng currentLatLng;
     int index = 0;
     private Handler handler;
     private Handler handler2;
-
     String provider;
     private final long MIN_TIME = 1000;
     private final float MIN_DISTANCE = 0.5F;
@@ -225,35 +215,19 @@ public class MapsFragment extends Fragment {
 
             mMap.getUiSettings().setZoomControlsEnabled(true);
 
+
             mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(final Marker marker) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Title");
-                    builder.setItems(new CharSequence[]
-                                    {"Chat", "button 2", "button 3", "button 4"},
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // The 'which' argument contains the index position
-                                    // of the selected item
-                                    switch (which) {
-                                        case 0:
-                                            Toast.makeText(getContext(), "clicked 1", Toast.LENGTH_SHORT).show();
-                                            break;
-                                        case 1:
-                                            Toast.makeText(getContext(), "clicked 2", Toast.LENGTH_SHORT).show();
-                                            break;
-                                        case 2:
-                                            Toast.makeText(getContext(), "clicked 3", Toast.LENGTH_SHORT).show();
-                                            break;
-                                        case 3:
-                                            Toast.makeText(getContext(), "clicked 4", Toast.LENGTH_SHORT).show();
-                                            break;
-                                    }
-                                }
-                            });
-                    builder.create().show();
-
+                    if(marker.equals(movingBusMarker)) {
+                        GoogleMapsActivity activity = (GoogleMapsActivity) getActivity();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Autocarro " + activity.getCarreira());
+                        builder.setItems(new CharSequence[]{ "Lotação Máxima: 71"}, null)
+                                .setPositiveButton("Ir para a sala de chat",null)
+                                .setIcon(R.drawable.busicon);
+                        builder.create().show();
+                    }
                     return true;
                 }
             });
@@ -392,14 +366,14 @@ public class MapsFragment extends Fragment {
     }
 
     private void updateCarLocation(LatLng latLngCar) {
-        if (movingCabMarker == null) {
-            movingCabMarker = addCarMarkerAndGet(latLngCar);
+        if (movingBusMarker == null) {
+            movingBusMarker = addCarMarkerAndGet(latLngCar);
         }
         if (previousLatLng == null) {
             currentLatLng = latLngCar;
             previousLatLng = currentLatLng;
-            movingCabMarker.setPosition(currentLatLng);
-            movingCabMarker.setAnchor(0.5f, 0.5f);
+            movingBusMarker.setPosition(currentLatLng);
+            movingBusMarker.setAnchor(0.5f, 0.5f);
 
         } else {
             previousLatLng = currentLatLng;
@@ -414,8 +388,8 @@ public class MapsFragment extends Fragment {
                             multiplier * currentLatLng.latitude + (1 - multiplier) * previousLatLng.latitude,
                             multiplier * currentLatLng.longitude + (1 - multiplier) * previousLatLng.longitude
                     );
-                    movingCabMarker.setPosition(nextLocation);
-                    movingCabMarker.setAnchor(0.5f, 0.5f);
+                    movingBusMarker.setPosition(nextLocation);
+                    movingBusMarker.setAnchor(0.5f, 0.5f);
                 }
 
             });

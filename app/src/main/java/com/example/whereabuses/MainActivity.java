@@ -73,26 +73,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.buses_app_menu, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (findViewById(R.id.mainLayout) != null) {
-            switch (item.getItemId()) {
-                case R.id.optionSettings:
-                    Intent optionsIntent = new Intent(this, Settings.class);
-                    startActivity(optionsIntent);
-            }
-        }
-        return true;
-    }
-
 
     public void searchButton(View view){
         Intent mapIntent = new Intent(this, GoogleMapsActivity.class);

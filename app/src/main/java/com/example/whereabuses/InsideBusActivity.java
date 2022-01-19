@@ -75,7 +75,7 @@ public class InsideBusActivity extends AppCompatActivity {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 InsideBusMapFragment ibmapfragment = (InsideBusMapFragment) fragmentManager.findFragmentByTag("mapFragment");
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setTitle("Warnings");
+                builder.setIcon(R.drawable.alert).setTitle("Warnings");
                 builder.setItems(new CharSequence[]
                                 {"Accident", "Slow traffic"},
                         new DialogInterface.OnClickListener() {
