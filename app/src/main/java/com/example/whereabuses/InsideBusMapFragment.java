@@ -35,8 +35,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.SetOptions;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import Utils.MapUtils;
 
@@ -54,6 +64,9 @@ public class InsideBusMapFragment extends Fragment {
     private Location myLocation;
     private LatLng latLng;
     public ArrayList<MarkerOptions> locationArrayList = new ArrayList<MarkerOptions>();
+    FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+    int counter = 0;
+    DocumentReference documentReference = rootRef.collection("730").document("Markers");
 
     public void setMarkerOnMap(int input){
         BitmapDescriptor slowTraffic =BitmapDescriptorFactory.fromBitmap(MapUtils.getSlowTrafficIcon(getContext()));
@@ -61,14 +74,53 @@ public class InsideBusMapFragment extends Fragment {
         switch (input) {
             case 0:
                 if(latLng != null) {
-                    MarkerOptions mo = new MarkerOptions().position(latLng).icon(crash);
+
+                    MarkerOptions mo = new MarkerOptions().title("Acidente").position(latLng).icon(crash);
+                    GeoPoint markerlocal = new GeoPoint(latLng.latitude, latLng.longitude);
+                    Map<String, Map.Entry<GeoPoint, String>> actionMap = new HashMap<String, Map.Entry<GeoPoint, String>>();
+                    Map.Entry<GeoPoint,String> entry =
+                            new AbstractMap.SimpleEntry<GeoPoint, String>(markerlocal,"Acidente");
+
+                    actionMap.put("Marker" + counter ,entry);
                     mMap.addMarker(mo);
+                    documentReference.set(actionMap, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(@NonNull Void unused) {
+                            //System.out.println("SUCESSO A ENVIAR PARA FIREBASE");
+                            counter++;
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //System.out.println("PROBLEMA A ENVIAR PARA FIREBASE");
+                        }
+                    });
+
                 }
                 break;
             case 1:
                 if(latLng != null) {
-                    MarkerOptions mo = new MarkerOptions().position(latLng).icon(slowTraffic);
+                    MarkerOptions mo = new MarkerOptions().title("Trânsito").position(latLng).icon(slowTraffic);
                     mMap.addMarker(mo);
+                    GeoPoint markerlocal = new GeoPoint(latLng.latitude, latLng.longitude);
+                    Map<String, Map.Entry<GeoPoint, String>> actionMap = new HashMap<String, Map.Entry<GeoPoint, String>>();
+                    Map.Entry<GeoPoint,String> entry =
+                            new AbstractMap.SimpleEntry<GeoPoint, String>(markerlocal,"Trânsito");
+
+                    actionMap.put("Marker" + counter ,entry);
+                    mMap.addMarker(mo);
+                    documentReference.set(actionMap, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(@NonNull Void unused) {
+                            //System.out.println("SUCESSO A ENVIAR PARA FIREBASE");
+                            counter++;
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //System.out.println("PROBLEMA A ENVIAR PARA FIREBASE");
+                        }
+                    });
                 }
                 break;
         }
